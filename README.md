@@ -22,7 +22,7 @@ jQueryとjquery.cbsharecount.jsをページに読み込みます。
 ```
 
 ###JavaScript
-JavaScriptの実装は以下の1行のみ！
+JavaScriptの実装は以下の1行のみ！（複数のURLの値を取得する場合でも）
 ```html
 <script>
 $(セレクター).cbShareCount();
@@ -30,8 +30,8 @@ $(セレクター).cbShareCount();
 ```
   
   
-###HTML/CSS
-HTML/CSSの実装は以下のルールさえ押さえておけば、あとは自由にデザイン可能です。
+###HTML
+HTMLの実装は以下のルールさえ押さえておけば、あとは自由にCSSにてデザイン可能です。
 
 ####URLの取得部分
 [ルール1]  
