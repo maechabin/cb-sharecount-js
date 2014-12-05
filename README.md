@@ -8,7 +8,8 @@
 - 実装が簡単。プラグインを実行させたいjQueryオブジェクトに指定したセレクター要素のtitle属性に[シェア数を取得したいURL]を設定するだけ。**JavaScriptの実装はたったの1行**。
 - 複数のURLの値の取得ができるので、ブログ記事の一覧などでの使用に最適。
 - 非同期で値を取得するので、ページの表示にもやさしい。
-- 値だけを取得するので、デザインは自由に行える。
+- 値だけを取得するので、レイアウトもデザインも自由に行える。
+- はてなブックマーク登録数、Twitterツイート数、Facebookいいね数の3サービスに対応
 
 
 ##＜実装方法＞
@@ -22,7 +23,7 @@ jQueryとjquery.cbsharecount.jsをページに読み込みます。
 
 ###JavaScript
 JavaScriptの実装は以下の1行のみ！
-```javascript
+```html
 <script>
 $(セレクター).cbShareCount();
 </script>
@@ -44,16 +45,16 @@ jQueryオブジェクトに指定したセレクター要素のtitle属性に[�
 ####値の表示部分
 [ルール2]  
 jQueryオブジェクトに指定したセレクター要素の子要素にそれぞれ以下のクラス属性を指定
-- class="cb-hb"　→　はてなブックマークの登録数表示用
-- class="cb-tw"　→　ツイッターのツイート数表示用
-- class="cb-fb"　→　Facebookのいいね数表示用
+- **class="cb-hb"**　→　はてなブックマークの登録数表示用
+- **class="cb-tw"**　→　ツイッターのツイート数表示用
+- **class="cb-fb"**　→　Facebookのいいね数表示用
 
 [ルール3]  
 値は上記のclass属性をつけた要素の子要素のspan要素に表示される。
 ```html
 <div class="[セレクター]" title="[シェア数を取得したいページのURL]">
 	<!--子要素-->
-	<p class="cb-hb"><span>[ここに値が表示される]</span></p>
+	<p class="cb-hb"><span>[ここに取得した値が表示される]</span></p>
 </div>
 ```
 
@@ -77,7 +78,7 @@ jQueryオブジェクトに指定したセレクター要素の子要素にそ�
 </div>
 ```
 
-###複数のURLの値を取得する際の実装例
+###複数のURLの値を取得する際の実装例（繰り返処理しても可）
 ```html
 <div class="[セレクター]" title="[シェア数を取得したいページのURL1]">
     <p class="cb-fb">Facebook<a href="#"><span></span></a></p>
@@ -91,6 +92,7 @@ jQueryオブジェクトに指定したセレクター要素の子要素にそ�
     <p class="cb-hb">Hatena<a href="#"><span></span></a></p>
 </div>
 ```
+
 
 ##＜デモ＞
 
