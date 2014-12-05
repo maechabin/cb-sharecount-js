@@ -2,6 +2,7 @@
  * jquery.cbsharecount.js v1.0.0
  * Auther @maechabin
  * Licensed under mit license
+ * https://github.com/maechabin/jquery.cb-share-count.js
  */
 
 ;(function ($, window, document, undefined) {

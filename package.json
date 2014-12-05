@@ -1,0 +1,24 @@
+{
+  "name": "share_count",
+  "version": "1.0.0",
+  "description": "",
+  "main": "jquery.cbsharecount.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/maechabin/jquery.cb-share-count.js.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/maechabin/jquery.cb-share-count.js/issues"
+  },
+  "homepage": "https://github.com/maechabin/jquery.cb-share-count.js",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-uglify": "^0.6.0",
+    "grunt-contrib-watch": "^0.6.1"
+  }
+}
