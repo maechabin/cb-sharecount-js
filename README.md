@@ -80,13 +80,13 @@ jQueryオブジェクトに指定したセレクター要素の子要素にそ�
 
 ###複数のURLの値を取得する際の実装例（繰り返処理しても可）
 ```html
-<div class="[セレクター]" title="[シェア数を取得したいページのURL1]">
+<div class="[セレクター（同じもの）]" title="[シェア数を取得したいページのURL1]">
     <p class="cb-fb">Facebook<a href="#"><span></span></a></p>
     <p class="cb-tw">Twitter<a href="#"><span></span></a></p>
     <p class="cb-hb">Hatena<a href="#"><span></span></a></p>
 </div>
 
-<div class="[セレクター]" title="[シェア数を取得したいページのURL2]">
+<div class="[セレクター（同じもの）]" title="[シェア数を取得したいページのURL2]">
     <p class="cb-fb">Facebook<a href="#"><span></span></a></p>
     <p class="cb-tw">Twitter<a href="#"><span></span></a></p>
     <p class="cb-hb">Hatena<a href="#"><span></span></a></p>
