@@ -5,7 +5,7 @@
 任意のURL（複数可）のSNS上でのシェア数を非同期で取得して表示するためのjQueryプラグイン。
 
 ##＜特徴＞
-- 実装が簡単。プラグインを実行させたいjQueryオブジェクトに指定したセレクター要素のtitle属性に[シェア数を取得したいURL]を設定するだけ。
+- 実装が簡単。プラグインを実行させたいjQueryオブジェクトに指定したセレクター要素のtitle属性に[シェア数を取得したいURL]を設定するだけ。**JavaScriptの実装はたったの1行**。
 - 複数のURLの値の取得ができるので、ブログ記事の一覧などでの使用に最適。
 - 非同期で値を取得するので、ページの表示にもやさしい。
 - 値だけを取得するので、デザインは自由に行える。
@@ -21,7 +21,7 @@ jQueryとjquery.cbsharecount.jsをページに読み込みます。
 ```
 
 ###JavaScript
-JavaScriptの実装は以下の1行のみ。
+JavaScriptの実装は以下の1行のみ！
 ```javascript
 <script>
 $(セレクター).cbShareCount();
@@ -36,8 +36,8 @@ HTML/CSSの実装は以下のルールさえ押さえておけば、あとは自
 [ルール1]  
 jQueryオブジェクトに指定したセレクター要素のtitle属性に[シェア数を取得したいURL]を設定
 ```html
-<div class="[セレクター]" title="**[シェア数を取得したいページのURL]**">
-
+<div class="[セレクター]" title="[シェア数を取得したいページのURL]">
+    [取得した値を表示させる箇所]
 </div>
 ```
 
@@ -71,6 +71,21 @@ jQueryオブジェクトに指定したセレクター要素の子要素にそ�
 ###divとpを使った実装例
 ```html
 <div class="[セレクター]" title="[シェア数を取得したいページのURL]">
+    <p class="cb-fb">Facebook<a href="#"><span></span></a></p>
+    <p class="cb-tw">Twitter<a href="#"><span></span></a></p>
+    <p class="cb-hb">Hatena<a href="#"><span></span></a></p>
+</div>
+```
+
+###複数のURLの値を取得する際の実装例
+```html
+<div class="[セレクター]" title="[シェア数を取得したいページのURL1]">
+    <p class="cb-fb">Facebook<a href="#"><span></span></a></p>
+    <p class="cb-tw">Twitter<a href="#"><span></span></a></p>
+    <p class="cb-hb">Hatena<a href="#"><span></span></a></p>
+</div>
+
+<div class="[セレクター]" title="[シェア数を取得したいページのURL2]">
     <p class="cb-fb">Facebook<a href="#"><span></span></a></p>
     <p class="cb-tw">Twitter<a href="#"><span></span></a></p>
     <p class="cb-hb">Hatena<a href="#"><span></span></a></p>
