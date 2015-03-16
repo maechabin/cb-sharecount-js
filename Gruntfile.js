@@ -1,29 +1,35 @@
 module.exports = function (grunt) {
 
-    var pkg = grunt.file.readJSON('package.json');
+  var pkg = grunt.file.readJSON('package.json');
 
-    grunt.initConfig({
+  grunt.initConfig({
 
-        uglify: {
-            dist: {
-                files: {
-                    // 出力ファイル: 元ファイル
-                    'jquery.cbsharecount.min.js': 'jquery.cbsharecount.js'
-                }
-            }
-        },
-
-        watch: {
-            js: {
-                files: 'js/*.js',
-                tasks: ['uglify']
-            }
+    uglify: {
+      dist: {
+        files: {
+          'jquery.cbsharecount.min.js': 'jquery.cbsharecount.js'
         }
-    });
+      }
+    },
 
-    // プラグインのロード・デフォルトタスクの登録
-    grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.registerTask('default', ['uglify']);
+    watch: {
+      js: {
+        files: 'jquery.cbsharecount.js',
+        tasks: ['uglify']
+      }
+    },
+
+    jshint: {
+      all: ['jquery.cbsharecount.js']
+    }
+
+  });
+
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
+
+  grunt.registerTask('default', ['uglify']);
+  grunt.registerTask('hint', ['jshint']);
 
 };
