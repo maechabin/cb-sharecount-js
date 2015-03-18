@@ -1,5 +1,5 @@
 /*!
- * jquery.cbsharecount.js v1.0.1
+ * jquery.cbsharecount.js v1.0.2
  * Auther @maechabin
  * Licensed under mit license
  * https://github.com/maechabin/jquery.cb-share-count.js
@@ -8,11 +8,11 @@
 
   if (typeof module === "object" && typeof module.exports === "object") {
 
-  factory(require("jquery"), window, document);
+    module.exports = factory(require("jquery"), window, document);
 
   } else {
 
-  factory(jQuery, window, document);
+    factory(jQuery, window, document);
 
   }
 
