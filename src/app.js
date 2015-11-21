@@ -1,5 +1,5 @@
 /*!
- * jquery.cbsharecount.js v1.0.2
+ * jquery.cbsharecount.js v1.0.3
  * Auther @maechabin
  * Licensed under mit license
  * https://github.com/maechabin/jquery.cb-share-count.js
@@ -33,13 +33,13 @@
   };
 
   Share.prototype.data = {
-
+/*
     twitter: {
       api_url: "http://urls.api.twitter.com/1/urls/count.json",
       param_name: "url",
       count: 0
     },
-
+*/
     facebook: {
       api_url: "http://graph.facebook.com/",
       param_name: "id",
@@ -77,31 +77,31 @@
   Share.prototype.view = function (arg) {
 
     var that = this;
-    var tw = $(".cb-tw").eq(that.num).find("span");
+//    var tw = $(".cb-tw").eq(that.num).find("span");
     var fb = $(".cb-fb").eq(that.num).find("span");
     var hb = $(".cb-hb").eq(that.num).find("span");
 
     $(arg).each(function (i) {
 
       switch (i) {
-
+/*
         case 0:
-          that.data.twitter.count = this[0].count;
+          that.data.twitter.count = this[0].count || "";
           break;
-
-        case 1:
+*/
+        case 0:
           that.data.facebook.count = this[0].shares || this[0].likes || 0;
           break;
 
-        case 2:
-          that.data.hatena.count = this[0];
+        case 1:
+          that.data.hatena.count = this[0] || "";
           break;
 
       }
 
     });
 
-    tw.html(that.data.twitter.count);
+//    tw.html(that.data.twitter.count);
     fb.html(that.data.facebook.count);
     hb.html(that.data.hatena.count);
 
@@ -127,7 +127,7 @@
     });
 
   };
-  
+
   Share.prototype.init = function () {
 
     this.site_url = this.$element.attr("title");
@@ -146,5 +146,5 @@
     });
 
   };
-  
+
 }));

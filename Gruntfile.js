@@ -7,7 +7,7 @@ module.exports = function (grunt) {
     uglify: {
       dist: {
         files: {
-          'jquery.cbsharecount.min.js': 'jquery.cbsharecount.js'
+          './dist/jquery.cbsharecount.min.js': './src/app.js'
         }
       }
     },

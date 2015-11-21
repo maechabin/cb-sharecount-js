@@ -9,7 +9,7 @@
 - 複数のURLの値の取得ができるので、ブログ記事の一覧などでの使用に最適。
 - 非同期かつ並列処理で値を取得するので、ページの表示にもやさしい。
 - 値だけを取得するので、レイアウトもデザインも自由に行える。
-- はてなブックマーク登録数、Twitterツイート数、Facebookいいね数の3サービスに対応
+- はてなブックマーク登録数、Facebookいいね数の2サービスに対応
 
 
 ##＜実装方法＞
@@ -46,7 +46,6 @@ jQueryオブジェクトに指定したセレクター要素のtitle属性に**[
 [ルール2]  
 jQueryオブジェクトに指定したセレクター要素の子要素にそれぞれ以下の**[クラス属性]**を指定
 - **class="cb-hb"**　→　はてなブックマークの登録数表示用
-- **class="cb-tw"**　→　ツイッターのツイート数表示用
 - **class="cb-fb"**　→　Facebookのいいね数表示用
 
 [ルール3]  
@@ -64,7 +63,6 @@ jQueryオブジェクトに指定したセレクター要素の子要素にそ�
 ```html
 <ul class="[セレクター]" title="[シェア数を取得したいページのURL]">
     <li class="cb-hb">はてブ数<span></span></li>
-    <li class="cb-tw">ツイート数<span></span></li>
     <li class="cb-fb">いいね<span></span></li>
 </ul>
 ```
@@ -73,7 +71,6 @@ jQueryオブジェクトに指定したセレクター要素の子要素にそ�
 ```html
 <div class="[セレクター]" title="[シェア数を取得したいページのURL]">
     <p class="cb-fb">Facebook<a href="#"><span></span></a></p>
-    <p class="cb-tw">Twitter<a href="#"><span></span></a></p>
     <p class="cb-hb">Hatena<a href="#"><span></span></a></p>
 </div>
 ```
@@ -82,13 +79,11 @@ jQueryオブジェクトに指定したセレクター要素の子要素にそ�
 ```html
 <div class="[セレクター（同じもの）]" title="[シェア数を取得したいページのURL1]">
     <p class="cb-fb">Facebook<a href="#"><span></span></a></p>
-    <p class="cb-tw">Twitter<a href="#"><span></span></a></p>
     <p class="cb-hb">Hatena<a href="#"><span></span></a></p>
 </div>
 
 <div class="[セレクター（同じもの）]" title="[シェア数を取得したいページのURL2]">
     <p class="cb-fb">Facebook<a href="#"><span></span></a></p>
-    <p class="cb-tw">Twitter<a href="#"><span></span></a></p>
     <p class="cb-hb">Hatena<a href="#"><span></span></a></p>
 </div>
 ```
@@ -104,3 +99,8 @@ jQueryオブジェクトに指定したセレクター要素の子要素にそ�
 ##＜ライセンス＞
 
 MIT license
+
+##＜アップデート情報＞
+
+2015-11-21 v1.0.3
+ - TwitterのAPIの仕様変更により、Twitterのツイート数表示機能を停止
