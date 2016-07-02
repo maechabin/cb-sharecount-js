@@ -1,5 +1,5 @@
 /*!
- * jquery.cbsharecount.js v1.2.0
+ * jquery.cbsharecount.js v1.2.1
  * Auther @maechabin
  * Licensed under mit license
  * https://github.com/maechabin/jquery.cb-share-count.js
@@ -23,6 +23,7 @@
     this.num = i;
     this.options = options;
     this.defaults = {
+      cache: true,
       cacheTime: 86400000
     };
   };
@@ -69,7 +70,9 @@
           break;
       }
     });
-    that.save();
+    if (that.conf.cache) {
+      that.save();
+    }
     return that.render();
   };
 
@@ -82,8 +85,8 @@
 
   Share.prototype.save = function save() {
     localStorage.setItem('sc_' + this.site_url, JSON.stringify({
-      fbCount: this.data.facebook.count,
-      hbCount: this.data.hatena.count,
+      fb: this.data.facebook.count,
+      hb: this.data.hatena.count,
       saveTime: new Date().getTime()
     }));
   };
@@ -104,13 +107,18 @@
   };
 
   Share.prototype.checkCache = function checkCache() {
-    var cache = JSON.parse(localStorage.getItem('sc_' + this.site_url)) || null;
-    var currentTime = new Date().getTime();
+    var cache;
+    var currentTime;
 
-    if (cache && currentTime - cache.saveTime < this.conf.cacheTime) {
-      this.data.facebook.count = cache.fbCount;
-      this.data.hatena.count = cache.hbCount;
-      return this.render();
+    if (('localStorage' in window) && (window.localStorage !== null)) {
+      cache = JSON.parse(localStorage.getItem('sc_' + this.site_url)) || null;
+      currentTime = new Date().getTime();
+
+      if (cache && currentTime - cache.saveTime < this.conf.cacheTime) {
+        this.data.facebook.count = cache.fb || cache.fbCount;
+        this.data.hatena.count = cache.hb || cache.hbCount;
+        return this.render();
+      }
     }
     return this.setup();
   };
@@ -118,7 +126,11 @@
   Share.prototype.init = function init() {
     this.site_url = this.$element.attr('title');
     this.conf = $.extend({}, this.defaults, this.options);
-    this.checkCache();
+    if (this.conf.cache) {
+      this.checkCache();
+    } else {
+      this.setup();
+    }
     return this;
   };
 
