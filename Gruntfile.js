@@ -14,13 +14,9 @@ module.exports = function (grunt) {
 
     watch: {
       js: {
-        files: 'jquery.cbsharecount.js',
+        files: './src/app.js',
         tasks: ['uglify']
       }
-    },
-
-    jshint: {
-      all: ['jquery.cbsharecount.js']
     }
 
   });
@@ -30,6 +26,4 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
 
   grunt.registerTask('default', ['uglify']);
-  grunt.registerTask('hint', ['jshint']);
-
 };
