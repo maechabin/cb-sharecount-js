@@ -1,6 +1,6 @@
 {
   "name": "cbsharecount",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "",
   "main": "jquery.cbsharecount.js",
   "scripts": {
@@ -11,6 +11,10 @@
     "type": "git",
     "url": "https://github.com/maechabin/jquery.cb-share-count.js.git"
   },
+  "keywords": [
+    "jQuery",
+    "jquery-plugin"
+  ],
   "author": "@maechabin http://mae.chab.in/",
   "license": "MIT License",
   "bugs": {

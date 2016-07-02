@@ -23,10 +23,22 @@ jQueryとjquery.cbsharecount.jsをページに読み込みます。
 
 ### JavaScript
 JavaScriptの実装は以下の1行のみ！（複数のURLの値を取得する場合でも）
-```html
+```javascript
 <script>
 $(document).ready(function () {
   $(セレクター).cbShareCount();
+});
+</script>
+```
+
+オプションを使って、cacheする時間を指定する場合（msで設定）
+```javascript
+<script>
+$(document).ready(function () {
+  $(セレクター).cbShareCount({
+    // 1時間（3600000ms）に設定
+    cacheTime: 3600000
+  });
 });
 </script>
 ```

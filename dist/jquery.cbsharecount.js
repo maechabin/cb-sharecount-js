@@ -1,5 +1,5 @@
 /*!
- * jquery.cbsharecount.js v1.1.0
+ * jquery.cbsharecount.js v1.2.0
  * Auther @maechabin
  * Licensed under mit license
  * https://github.com/maechabin/jquery.cb-share-count.js
@@ -13,7 +13,7 @@
 } (function ($, window, document, undefined) {
   'use strict';
 
-  var Share = function (element, i) {
+  var Share = function (element, i, options) {
     this.element = element;
     this.$element = $(element);
     this.site_url = '';
@@ -21,6 +21,10 @@
     this.param_name = '';
     this.send_data = {};
     this.num = i;
+    this.options = options;
+    this.defaults = {
+      cacheTime: 86400000
+    };
   };
 
   Share.prototype.data = {
@@ -80,7 +84,7 @@
     localStorage.setItem('sc_' + this.site_url, JSON.stringify({
       fbCount: this.data.facebook.count,
       hbCount: this.data.hatena.count,
-      saveDate: new Date().getTime()
+      saveTime: new Date().getTime()
     }));
   };
 
@@ -101,9 +105,9 @@
 
   Share.prototype.checkCache = function checkCache() {
     var cache = JSON.parse(localStorage.getItem('sc_' + this.site_url)) || null;
-    var currentDate = new Date().getTime();
+    var currentTime = new Date().getTime();
 
-    if (cache && currentDate - cache.saveDate < 86400000) {
+    if (cache && currentTime - cache.saveTime < this.conf.cacheTime) {
       this.data.facebook.count = cache.fbCount;
       this.data.hatena.count = cache.hbCount;
       return this.render();
@@ -113,13 +117,14 @@
 
   Share.prototype.init = function init() {
     this.site_url = this.$element.attr('title');
+    this.conf = $.extend({}, this.defaults, this.options);
     this.checkCache();
     return this;
   };
 
-  $.fn.cbShareCount = function () {
+  $.fn.cbShareCount = function (options) {
     return this.each(function (i) {
-      new Share(this, i).init();
+      new Share(this, i, options).init();
     });
   };
 }));
