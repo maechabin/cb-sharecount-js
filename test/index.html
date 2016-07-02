@@ -7,13 +7,17 @@
 </head>
 
 <body>
-  <div class="cb-share" title="http://google.com">
+  <div class="cb-share" title="http://google.com/">
+      <p class="cb-hb"><span>[ここに取得した値が表示される]</span></p>
+      <p class="cb-fb"><span>[ここに取得した値が表示される]</span></p>
+  </div>
+  <div class="cb-share" title="http://yahoo.com/">
       <p class="cb-hb"><span>[ここに取得した値が表示される]</span></p>
       <p class="cb-fb"><span>[ここに取得した値が表示される]</span></p>
   </div>
 
 <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-<script src="../dist/jquery.cbsharecount.min.js"></script>
+<script src="../dist/jquery.cbsharecount.js"></script>
 <script>
 $(".cb-share").cbShareCount();
 </script>
