@@ -1,10 +1,11 @@
 {
   "name": "cbsharecount",
-  "version": "1.2.1",
+  "version": "1.2.3",
   "description": "",
   "main": "jquery.cbsharecount.js",
   "scripts": {
-    "build": "Grunt",
+    "watch": "babel ./src/app.js --watch --out-file ./dist/jquery.cbsharecount.js",
+    "build": "babel ./src/app.js --compact=true -o ./dist/jquery.cbsharecount.min.js",
     "copy": "cp ./src/app.js ./dist/jquery.cbsharecount.js"
   },
   "repository": {
@@ -25,6 +26,7 @@
     "jquery": "^1.9.0"
   },
   "devDependencies": {
+    "babel-cli": "^6.10.1",
     "eslint": "^3.0.0",
     "eslint-config-airbnb-base": "^3.0.1",
     "eslint-plugin-import": "^1.10.0",
