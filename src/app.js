@@ -1,5 +1,5 @@
 /*!
- * jquery.cbsharecount.js v2.0.0
+ * jquery.cbsharecount.js v2.0.1
  * Auther @maechabin
  * Licensed under mit license
  * https://github.com/maechabin/jquery.cb-share-count.js
@@ -25,6 +25,7 @@
       this.defaults = {
         cache: true,
         cacheTime: 86400000,
+        assign: ['fb', 'hb', 'tw', 'pk'],
       };
       this.count = {
         fb: 0,
@@ -35,26 +36,27 @@
     }
 
     setParam(url) {
-      const json = {
-        facebook: {
+      const data = {};
+      const defaultData = {
+        fb: {
           api_url: 'https://graph.facebook.com/',
           param: {
             id: url,
           },
         },
-        hatena: {
+        hb: {
           api_url: 'http://api.b.st-hatena.com/entry.count',
           param: {
             url,
           },
         },
-        twitter: {
+        tw: {
           api_url: 'https://jsoon.digitiminimi.com/twitter/count.json',
           param: {
             url,
           },
         },
-        pocket: {
+        pk: {
           api_url: 'http://query.yahooapis.com/v1/public/yql',
           param: {
             q: 'SELECT content FROM data.headers WHERE url="https://widgets.getpocket.com/v1/button?label=pocket&count=vertical&v=1&url=' + url + '"',
@@ -63,10 +65,11 @@
           },
         },
       };
-      return json;
+      this.conf.assign.map((key) => (data[key] = defaultData[key]));
+      return data;
     }
 
-    getCount() {
+    getCount(key) {
       const d = new $.Deferred();
 
       $.ajax({
@@ -77,27 +80,31 @@
         data: this.send_data,
         success: d.resolve,
         error: d.reject,
+        context: key,
       });
       return d.promise();
     }
 
-    takeCount(arg) {
+    takeCount(key, arg) {
       const that = this;
-      console.log(arg);
+      const keyArray = key.split(',');
+
       $(arg).each(function (i) {
-        switch (i) {
-          case 0:
-            that.count.fb = this[0].shares || this[0].likes || 0;
+        const self = $.extend({}, this, { key: keyArray[i] });
+        const obj = this[0] ? this[0] : this;
+        switch (self.key) {
+          case 'fb':
+            that.count.fb = obj.shares || obj.likes || 0;
             break;
-          case 1:
-            that.count.hb = this[0] || 0;
+          case 'hb':
+            that.count.hb = obj || 0;
             break;
-          case 2:
-            that.count.tw = this[0].count || 0;
+          case 'tw':
+            that.count.tw = obj.count || 0;
             break;
-          case 3:
+          case 'pk':
             if (this[0].results) {
-              const content = this[0].results.toString();
+              const content = obj.results.toString();
               const match = content.match(/&lt;em id="cnt"&gt;(\d+)&lt;\/em&gt;/i);
               that.count.pk = (match != null) ? match[1] : 0;
             }
@@ -119,11 +126,11 @@
       $.each(data, (key, val) => {
         this.api_url = val.api_url;
         this.send_data = val.param;
-        df.push(this.getCount());
+        df.push(this.getCount(key));
       });
 
       $.when.apply($, df).done(function () {
-        return that.takeCount(arguments);
+        return that.takeCount(this.toString(), arguments);
       });
     }
 
@@ -132,36 +139,45 @@
       const hb = $('.cb-hb').eq(this.num).find('span');
       const tw = $('.cb-tw').eq(this.num).find('span');
       const pk = $('.cb-pk').eq(this.num).find('span');
-      fb.html(this.count.fb);
-      hb.html(this.count.hb);
-      tw.html(this.count.tw);
-      pk.html(this.count.pk);
+      if (this.conf.assign.includes('fb')) fb.html(this.count.fb || '');
+      if (this.conf.assign.includes('hb')) hb.html(this.count.hb || '');
+      if (this.conf.assign.includes('tw')) tw.html(this.count.tw || '');
+      if (this.conf.assign.includes('pk')) pk.html(this.count.pk || '');
     }
 
     save() {
-      localStorage.setItem(`sc_${this.site_url}`, JSON.stringify({
-        fb: this.count.fb,
-        hb: this.count.hb,
-        tw: this.count.tw,
-        pk: this.count.pk,
-        saveTime: new Date().getTime(),
-      }));
+      const cache = JSON.parse(localStorage.getItem(`sc_${this.site_url}`)) || {};
+      const count = {};
+      let margedCount = {};
+
+      if (this.conf.assign.includes('fb')) count.fb = this.count.fb;
+      if (this.conf.assign.includes('hb')) count.hb = this.count.hb;
+      if (this.conf.assign.includes('tw')) count.tw = this.count.tw;
+      if (this.conf.assign.includes('pk')) count.pk = this.count.pk;
+      count.saveTime = new Date().getTime();
+      margedCount = $.extend({}, cache, count);
+      localStorage.setItem(`sc_${this.site_url}`, JSON.stringify(margedCount));
       localStorage.setItem('cbsharecount', new Date().getTime());
     }
 
     checkCache() {
       let cache;
+      let nocache;
       let currentTime;
 
       if (('localStorage' in window) && (window.localStorage !== null)) {
         cache = JSON.parse(localStorage.getItem(`sc_${this.site_url}`)) || null;
         currentTime = new Date().getTime();
 
+        if (cache) {
+          nocache = this.conf.assign.filter((key) => cache[key] === undefined);
+          if (nocache.length > 0) {
+            return this.setup();
+          }
+        }
+
         if (cache && currentTime - cache.saveTime < this.conf.cacheTime) {
-          this.count.fb = cache.fb;
-          this.count.hb = cache.hb;
-          this.count.tw = cache.tw;
-          this.count.pk = cache.pk;
+          this.conf.assign.map((key) => (this.count[key] = cache[key] || ''));
           return this.render();
         }
       }

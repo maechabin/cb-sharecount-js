@@ -7,7 +7,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /*!
- * jquery.cbsharecount.js v2.0.0
+ * jquery.cbsharecount.js v2.0.1
  * Auther @maechabin
  * Licensed under mit license
  * https://github.com/maechabin/jquery.cb-share-count.js
@@ -33,7 +33,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       this.options = options;
       this.defaults = {
         cache: true,
-        cacheTime: 86400000
+        cacheTime: 86400000,
+        assign: ['fb', 'hb', 'tw', 'pk']
       };
       this.count = {
         fb: 0,
@@ -46,26 +47,27 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     _createClass(ShareCount, [{
       key: 'setParam',
       value: function setParam(url) {
-        var json = {
-          facebook: {
+        var data = {};
+        var defaultData = {
+          fb: {
             api_url: 'https://graph.facebook.com/',
             param: {
               id: url
             }
           },
-          hatena: {
+          hb: {
             api_url: 'http://api.b.st-hatena.com/entry.count',
             param: {
               url: url
             }
           },
-          twitter: {
+          tw: {
             api_url: 'https://jsoon.digitiminimi.com/twitter/count.json',
             param: {
               url: url
             }
           },
-          pocket: {
+          pk: {
             api_url: 'http://query.yahooapis.com/v1/public/yql',
             param: {
               q: 'SELECT content FROM data.headers WHERE url="https://widgets.getpocket.com/v1/button?label=pocket&count=vertical&v=1&url=' + url + '"',
@@ -74,11 +76,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
           }
         };
-        return json;
+        this.conf.assign.map(function (key) {
+          return data[key] = defaultData[key];
+        });
+        return data;
       }
     }, {
       key: 'getCount',
-      value: function getCount() {
+      value: function getCount(key) {
         var d = new $.Deferred();
 
         $.ajax({
@@ -88,29 +93,33 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           dataType: 'jsonp',
           data: this.send_data,
           success: d.resolve,
-          error: d.reject
+          error: d.reject,
+          context: key
         });
         return d.promise();
       }
     }, {
       key: 'takeCount',
-      value: function takeCount(arg) {
+      value: function takeCount(key, arg) {
         var that = this;
-        console.log(arg);
+        var keyArray = key.split(',');
+
         $(arg).each(function (i) {
-          switch (i) {
-            case 0:
-              that.count.fb = this[0].shares || this[0].likes || 0;
+          var self = $.extend({}, this, { key: keyArray[i] });
+          var obj = this[0] ? this[0] : this;
+          switch (self.key) {
+            case 'fb':
+              that.count.fb = obj.shares || obj.likes || 0;
               break;
-            case 1:
-              that.count.hb = this[0] || 0;
+            case 'hb':
+              that.count.hb = obj || 0;
               break;
-            case 2:
-              that.count.tw = this[0].count || 0;
+            case 'tw':
+              that.count.tw = obj.count || 0;
               break;
-            case 3:
+            case 'pk':
               if (this[0].results) {
-                var content = this[0].results.toString();
+                var content = obj.results.toString();
                 var match = content.match(/&lt;em id="cnt"&gt;(\d+)&lt;\/em&gt;/i);
                 that.count.pk = match != null ? match[1] : 0;
               }
@@ -135,11 +144,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         $.each(data, function (key, val) {
           _this.api_url = val.api_url;
           _this.send_data = val.param;
-          df.push(_this.getCount());
+          df.push(_this.getCount(key));
         });
 
         $.when.apply($, df).done(function () {
-          return that.takeCount(arguments);
+          return that.takeCount(this.toString(), arguments);
         });
       }
     }, {
@@ -149,38 +158,53 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var hb = $('.cb-hb').eq(this.num).find('span');
         var tw = $('.cb-tw').eq(this.num).find('span');
         var pk = $('.cb-pk').eq(this.num).find('span');
-        fb.html(this.count.fb);
-        hb.html(this.count.hb);
-        tw.html(this.count.tw);
-        pk.html(this.count.pk);
+        if (this.conf.assign.includes('fb')) fb.html(this.count.fb || '');
+        if (this.conf.assign.includes('hb')) hb.html(this.count.hb || '');
+        if (this.conf.assign.includes('tw')) tw.html(this.count.tw || '');
+        if (this.conf.assign.includes('pk')) pk.html(this.count.pk || '');
       }
     }, {
       key: 'save',
       value: function save() {
-        localStorage.setItem('sc_' + this.site_url, JSON.stringify({
-          fb: this.count.fb,
-          hb: this.count.hb,
-          tw: this.count.tw,
-          pk: this.count.pk,
-          saveTime: new Date().getTime()
-        }));
+        var cache = JSON.parse(localStorage.getItem('sc_' + this.site_url)) || {};
+        var count = {};
+        var margedCount = {};
+
+        if (this.conf.assign.includes('fb')) count.fb = this.count.fb;
+        if (this.conf.assign.includes('hb')) count.hb = this.count.hb;
+        if (this.conf.assign.includes('tw')) count.tw = this.count.tw;
+        if (this.conf.assign.includes('pk')) count.pk = this.count.pk;
+        count.saveTime = new Date().getTime();
+        margedCount = $.extend({}, cache, count);
+        localStorage.setItem('sc_' + this.site_url, JSON.stringify(margedCount));
         localStorage.setItem('cbsharecount', new Date().getTime());
       }
     }, {
       key: 'checkCache',
       value: function checkCache() {
+        var _this2 = this;
+
         var cache = void 0;
+        var nocache = void 0;
         var currentTime = void 0;
 
         if ('localStorage' in window && window.localStorage !== null) {
           cache = JSON.parse(localStorage.getItem('sc_' + this.site_url)) || null;
           currentTime = new Date().getTime();
 
+          if (cache) {
+            nocache = this.conf.assign.filter(function (key) {
+              return cache[key] === undefined;
+            });
+            if (nocache.length > 0) {
+              return this.setup();
+            }
+          }
+
           if (cache && currentTime - cache.saveTime < this.conf.cacheTime) {
-            this.count.fb = cache.fb;
-            this.count.hb = cache.hb;
-            this.count.tw = cache.tw;
-            this.count.pk = cache.pk;
+            this.conf.assign.map(function (key) {
+              return _this2.count[key] = cache[key] || '';
+            });
             return this.render();
           }
         }
