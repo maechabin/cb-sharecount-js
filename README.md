@@ -1,4 +1,4 @@
-#jquery.cbsharecount.js
+# cb-sharecount-js
 
 ## 概要
 
