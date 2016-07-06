@@ -7,7 +7,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /*!
- * jquery.cbsharecount.js v1.2.1
+ * jquery.cbsharecount.js v2.0.0
  * Auther @maechabin
  * Licensed under mit license
  * https://github.com/maechabin/jquery.cb-share-count.js
@@ -19,9 +19,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     factory(jQuery, window);
   }
 })(function ($, window) {
-  var Share = function () {
-    function Share(element, i, options) {
-      _classCallCheck(this, Share);
+  var ShareCount = function () {
+    function ShareCount(element, i, options) {
+      _classCallCheck(this, ShareCount);
 
       this.element = element;
       this.$element = $(element);
@@ -35,21 +35,48 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         cache: true,
         cacheTime: 86400000
       };
-      this.data = {
-        facebook: {
-          api_url: 'http://graph.facebook.com/',
-          param_name: 'id',
-          count: 0
-        },
-        hatena: {
-          api_url: 'http://api.b.st-hatena.com/entry.count',
-          param_name: 'url',
-          count: 0
-        }
+      this.count = {
+        fb: 0,
+        hb: 0,
+        tw: 0,
+        pk: 0
       };
     }
 
-    _createClass(Share, [{
+    _createClass(ShareCount, [{
+      key: 'setParam',
+      value: function setParam(url) {
+        var json = {
+          facebook: {
+            api_url: 'https://graph.facebook.com/',
+            param: {
+              id: url
+            }
+          },
+          hatena: {
+            api_url: 'http://api.b.st-hatena.com/entry.count',
+            param: {
+              url: url
+            }
+          },
+          twitter: {
+            api_url: 'https://jsoon.digitiminimi.com/twitter/count.json',
+            param: {
+              url: url
+            }
+          },
+          pocket: {
+            api_url: 'http://query.yahooapis.com/v1/public/yql',
+            param: {
+              q: 'SELECT content FROM data.headers WHERE url="https://widgets.getpocket.com/v1/button?label=pocket&count=vertical&v=1&url=' + url + '"',
+              format: 'xml',
+              env: 'http://datatables.org/alltables.env'
+            }
+          }
+        };
+        return json;
+      }
+    }, {
       key: 'getCount',
       value: function getCount() {
         var d = new $.Deferred();
@@ -66,16 +93,27 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return d.promise();
       }
     }, {
-      key: 'view',
-      value: function view(arg) {
+      key: 'takeCount',
+      value: function takeCount(arg) {
         var that = this;
+        console.log(arg);
         $(arg).each(function (i) {
           switch (i) {
             case 0:
-              that.data.facebook.count = this[0].shares || this[0].likes || 0;
+              that.count.fb = this[0].shares || this[0].likes || 0;
               break;
             case 1:
-              that.data.hatena.count = this[0];
+              that.count.hb = this[0] || 0;
+              break;
+            case 2:
+              that.count.tw = this[0].count || 0;
+              break;
+            case 3:
+              if (this[0].results) {
+                var content = this[0].results.toString();
+                var match = content.match(/&lt;em id="cnt"&gt;(\d+)&lt;\/em&gt;/i);
+                that.count.pk = match != null ? match[1] : 0;
+              }
               break;
             default:
               break;
@@ -87,40 +125,46 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return that.render();
       }
     }, {
-      key: 'render',
-      value: function render() {
-        var fb = $('.cb-fb').eq(this.num).find('span');
-        var hb = $('.cb-hb').eq(this.num).find('span');
-        fb.html(this.data.facebook.count);
-        hb.html(this.data.hatena.count);
-      }
-    }, {
-      key: 'save',
-      value: function save() {
-        localStorage.setItem('sc_' + this.site_url, JSON.stringify({
-          fb: this.data.facebook.count,
-          hb: this.data.hatena.count,
-          saveTime: new Date().getTime()
-        }));
-        localStorage.setItem('cbsharecount', new Date().getTime());
-      }
-    }, {
       key: 'setup',
       value: function setup() {
         var _this = this;
 
         var that = this;
         var df = [];
-
-        $.each(this.data, function (key, val) {
+        var data = that.setParam(that.site_url);
+        $.each(data, function (key, val) {
           _this.api_url = val.api_url;
-          _this.send_data[val.param_name] = _this.site_url;
+          _this.send_data = val.param;
           df.push(_this.getCount());
         });
 
         $.when.apply($, df).done(function () {
-          return that.view(arguments);
+          return that.takeCount(arguments);
         });
+      }
+    }, {
+      key: 'render',
+      value: function render() {
+        var fb = $('.cb-fb').eq(this.num).find('span');
+        var hb = $('.cb-hb').eq(this.num).find('span');
+        var tw = $('.cb-tw').eq(this.num).find('span');
+        var pk = $('.cb-pk').eq(this.num).find('span');
+        fb.html(this.count.fb);
+        hb.html(this.count.hb);
+        tw.html(this.count.tw);
+        pk.html(this.count.pk);
+      }
+    }, {
+      key: 'save',
+      value: function save() {
+        localStorage.setItem('sc_' + this.site_url, JSON.stringify({
+          fb: this.count.fb,
+          hb: this.count.hb,
+          tw: this.count.tw,
+          pk: this.count.pk,
+          saveTime: new Date().getTime()
+        }));
+        localStorage.setItem('cbsharecount', new Date().getTime());
       }
     }, {
       key: 'checkCache',
@@ -133,8 +177,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           currentTime = new Date().getTime();
 
           if (cache && currentTime - cache.saveTime < this.conf.cacheTime) {
-            this.data.facebook.count = cache.fb;
-            this.data.hatena.count = cache.hb;
+            this.count.fb = cache.fb;
+            this.count.hb = cache.hb;
+            this.count.tw = cache.tw;
+            this.count.pk = cache.pk;
             return this.render();
           }
         }
@@ -154,10 +200,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
     }]);
 
-    return Share;
+    return ShareCount;
   }();
 
-  $.fn.cbShareCount = function (options) {
+  $.fn.cbShareCount = function cbShareCount(options) {
     var lastSaveTime = void 0;
     var storage = window.localStorage || null;
     var cacheTime = options.cacheTime || 86400000;
@@ -174,8 +220,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
     }
 
-    return this.each(function (i) {
-      new Share(this, i, options).init();
+    return this.each(function shareCount(i) {
+      new ShareCount(this, i, options).init();
     });
   };
 });

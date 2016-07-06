@@ -1,5 +1,5 @@
 /*!
- * jquery.cbsharecount.js v1.2.1
+ * jquery.cbsharecount.js v2.0.0
  * Auther @maechabin
  * Licensed under mit license
  * https://github.com/maechabin/jquery.cb-share-count.js
@@ -11,7 +11,7 @@
     factory(jQuery, window);
   }
 })(($, window) => {
-  class Share {
+  class ShareCount {
 
     constructor(element, i, options) {
       this.element = element;
@@ -26,18 +26,44 @@
         cache: true,
         cacheTime: 86400000,
       };
-      this.data = {
+      this.count = {
+        fb: 0,
+        hb: 0,
+        tw: 0,
+        pk: 0,
+      };
+    }
+
+    setParam(url) {
+      const json = {
         facebook: {
-          api_url: 'http://graph.facebook.com/',
-          param_name: 'id',
-          count: 0,
+          api_url: 'https://graph.facebook.com/',
+          param: {
+            id: url,
+          },
         },
         hatena: {
           api_url: 'http://api.b.st-hatena.com/entry.count',
-          param_name: 'url',
-          count: 0,
+          param: {
+            url,
+          },
+        },
+        twitter: {
+          api_url: 'https://jsoon.digitiminimi.com/twitter/count.json',
+          param: {
+            url,
+          },
+        },
+        pocket: {
+          api_url: 'http://query.yahooapis.com/v1/public/yql',
+          param: {
+            q: 'SELECT content FROM data.headers WHERE url="https://widgets.getpocket.com/v1/button?label=pocket&count=vertical&v=1&url=' + url + '"',
+            format: 'xml',
+            env: 'http://datatables.org/alltables.env',
+          },
         },
       };
+      return json;
     }
 
     getCount() {
@@ -55,15 +81,26 @@
       return d.promise();
     }
 
-    view(arg) {
+    takeCount(arg) {
       const that = this;
+      console.log(arg);
       $(arg).each(function (i) {
         switch (i) {
           case 0:
-            that.data.facebook.count = this[0].shares || this[0].likes || 0;
+            that.count.fb = this[0].shares || this[0].likes || 0;
             break;
           case 1:
-            that.data.hatena.count = this[0];
+            that.count.hb = this[0] || 0;
+            break;
+          case 2:
+            that.count.tw = this[0].count || 0;
+            break;
+          case 3:
+            if (this[0].results) {
+              const content = this[0].results.toString();
+              const match = content.match(/&lt;em id="cnt"&gt;(\d+)&lt;\/em&gt;/i);
+              that.count.pk = (match != null) ? match[1] : 0;
+            }
             break;
           default:
             break;
@@ -75,35 +112,41 @@
       return that.render();
     }
 
-    render() {
-      const fb = $('.cb-fb').eq(this.num).find('span');
-      const hb = $('.cb-hb').eq(this.num).find('span');
-      fb.html(this.data.facebook.count);
-      hb.html(this.data.hatena.count);
-    }
-
-    save() {
-      localStorage.setItem(`sc_${this.site_url}`, JSON.stringify({
-        fb: this.data.facebook.count,
-        hb: this.data.hatena.count,
-        saveTime: new Date().getTime(),
-      }));
-      localStorage.setItem('cbsharecount', new Date().getTime());
-    }
-
     setup() {
       const that = this;
       const df = [];
-
-      $.each(this.data, (key, val) => {
+      const data = that.setParam(that.site_url);
+      $.each(data, (key, val) => {
         this.api_url = val.api_url;
-        this.send_data[val.param_name] = this.site_url;
+        this.send_data = val.param;
         df.push(this.getCount());
       });
 
       $.when.apply($, df).done(function () {
-        return that.view(arguments);
+        return that.takeCount(arguments);
       });
+    }
+
+    render() {
+      const fb = $('.cb-fb').eq(this.num).find('span');
+      const hb = $('.cb-hb').eq(this.num).find('span');
+      const tw = $('.cb-tw').eq(this.num).find('span');
+      const pk = $('.cb-pk').eq(this.num).find('span');
+      fb.html(this.count.fb);
+      hb.html(this.count.hb);
+      tw.html(this.count.tw);
+      pk.html(this.count.pk);
+    }
+
+    save() {
+      localStorage.setItem(`sc_${this.site_url}`, JSON.stringify({
+        fb: this.count.fb,
+        hb: this.count.hb,
+        tw: this.count.tw,
+        pk: this.count.pk,
+        saveTime: new Date().getTime(),
+      }));
+      localStorage.setItem('cbsharecount', new Date().getTime());
     }
 
     checkCache() {
@@ -115,8 +158,10 @@
         currentTime = new Date().getTime();
 
         if (cache && currentTime - cache.saveTime < this.conf.cacheTime) {
-          this.data.facebook.count = cache.fb;
-          this.data.hatena.count = cache.hb;
+          this.count.fb = cache.fb;
+          this.count.hb = cache.hb;
+          this.count.tw = cache.tw;
+          this.count.pk = cache.pk;
           return this.render();
         }
       }
@@ -135,7 +180,7 @@
     }
   }
 
-  $.fn.cbShareCount = function (options) {
+  $.fn.cbShareCount = function cbShareCount(options) {
     let lastSaveTime;
     const storage = window.localStorage || null;
     const cacheTime = options.cacheTime || 86400000;
@@ -152,8 +197,8 @@
       }
     }
 
-    return this.each(function (i) {
-      new Share(this, i, options).init();
+    return this.each(function shareCount(i) {
+      new ShareCount(this, i, options).init();
     });
   };
 });
