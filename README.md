@@ -1,27 +1,34 @@
 # cb-sharecount-js
 
-## 概要
+## About
 
-任意のURL（複数可）のSNS上でのシェア数を非同期で取得して表示するためのjQueryプラグイン。
+任意のURL（複数可）のSNS上でのシェア数を非同期で取得して表示するためのjQueryプラグイン。キャッシュ機能付き。
 
-## 特徴
+## Feature
 - 実装が簡単。プラグインを実行させたいjQueryオブジェクトに指定したセレクター要素のtitle属性に[シェア数を取得したいURL]を設定するだけ。**JavaScriptの実装はたったの1行**。
-- 複数のURLの値の取得ができるので、ブログ記事の一覧などでの使用に最適。
+- 同一ページ内で複数のURLの値の取得ができるので、ブログ記事の一覧などでの使用に最適。
 - 非同期かつ並列処理で値を取得するので、ページの表示にもやさしい。
 - 値だけを取得するので、レイアウトもデザインも自由に行える。
-- はてなブックマーク登録数、Facebookいいね数の2サービスに対応。
-- localStorageを使ったcache機能付き（デフォルト: 1日）
+- localStorageを使ったcache機能付き（デフォルト有効期限: 1日）。同一ドメイン内であれば複数のページで共有可能。
+- はてなブックマーク登録数、Facebookいいね数、Twitterツイート数、Pocketシェア数の4サービスに対応。表示するSNSを選択可能。
 
-## 実装方法
+```
+Twitterのツイート数を取得するには、事前に以下のサービスに登録しておく必要があります。
 
-### 読み込み
+count.jsoon
+https://jsoon.digitiminimi.com/
+```
+
+## Usage
+
+### ファイルの読み込み
 jQueryとjquery.cbsharecount.jsをページに読み込みます。
 ```html
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 <script src="jquery.cbsharecount.min.js"></script>
 ```
 
-### JavaScript
+### JavaScriptの実装
 JavaScriptの実装は以下の1行のみ！（複数のURLの値を取得する場合でも）
 ```javascript
 <script>
@@ -43,12 +50,35 @@ $(document).ready(function () {
 </script>
 ```
 
-### HTML
+表示するSNSサービスをFacebookいいね数とはてなブックマーク登録数に限定する場合。
+```javascript
+<script>
+$(document).ready(function () {
+  $(セレクター).cbShareCount({
+    assign: ['fb', 'hb']
+  });
+});
+</script>
+```
+
+キャッシュ機能を使用しない場合
+```javascript
+<script>
+$(document).ready(function () {
+  $(セレクター).cbShareCount({
+    cache: false
+  });
+});
+</script>
+```
+
+
+### HTMLの実装
 HTMLの実装は以下のルールさえ押さえておけば、あとは自由です。
 
 #### URLの取得部分
 [ルール1]
-jQueryオブジェクトに指定したセレクター要素のtitle属性に`[シェア数を取得したいURL]`を設定
+jQueryオブジェクトに指定したセレクター要素の`title属性`に`[シェア数を取得したいURL]`を設定
 
 ```html
 <div class="[セレクター]" title="[シェア数を取得したいページのURL]">
@@ -61,6 +91,8 @@ jQueryオブジェクトに指定したセレクター要素のtitle属性に`[�
 jQueryオブジェクトに指定したセレクター要素の子要素にそれぞれ以下の`[クラス属性]`を指定
 - **class="cb-hb"**　→　はてなブックマークの登録数表示用
 - **class="cb-fb"**　→　Facebookのいいね数表示用
+- **class="cb-tw"**　→　Twitterのツイート数表示用
+- **class="cb-pk"**　→　Pocketのシェア数表示用
 
 [ルール3]  
 値は上記のclass属性をつけた要素の子要素の`[span要素]`に表示される。
@@ -71,7 +103,7 @@ jQueryオブジェクトに指定したセレクター要素の子要素にそ�
 </div>
 ```
 
-## 実装例
+## Example
 
 ### ulとliを使った実装例
 ```html
@@ -102,19 +134,33 @@ jQueryオブジェクトに指定したセレクター要素の子要素にそ�
 </div>
 ```
 
+## Options
 
-## デモ
+**cache {Boolean}**
+キャッシュ機能を使用するか(true)、使用しないか（false）指定します。デフォルト値は`false`。
+
+**cacheTime {Number}**
+キャッシュ機能を使用する場合のキャッシュの有効期間を指定します。ms（ミリ秒）の数値を指定します。デフォルト値は1日で`86400000`。
+
+**assign {Array}**
+シュア数を取得するSNSサービスを指定します。次のようにサービスの略語を配列に指定します。`Facebook => 'fb'`、`Twitter => 'tw'`、`はてなブックマーク => 'hb'`、`Pocket => 'pk'`。デフォルト値は、すべて表示するで`['fb', 'hb', 'tw', 'pk']`。
+
+## Demo
 
 [http://jsdo.it/maechabin/mixw](http://jsdo.it/maechabin/mixw)
 
 私のブログにも実装済みです。  
 [http://mae.chab.in](http://mae.chab.in/)
 
-## ライセンス
+## License
 
 MIT license
 
-## アップデート情報
+## Update
+
+2016-07-07 v2.0.0
+- Twitterツイート数（別途count.jsoonを使用）、Pocketシェア数に対応
+- キャッシュ機能改善
 
 2016-07-01 v1.1.0
 - キャッシュ機能の追加（1日保存）

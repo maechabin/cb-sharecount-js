@@ -112,7 +112,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               that.count.fb = obj.shares || obj.likes || 0;
               break;
             case 'hb':
-              that.count.hb = obj || 0;
+              that.count.hb = Array.isArray(obj) ? obj[0] : obj || 0;
               break;
             case 'tw':
               that.count.tw = obj.count || 0;
@@ -158,10 +158,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var hb = $('.cb-hb').eq(this.num).find('span');
         var tw = $('.cb-tw').eq(this.num).find('span');
         var pk = $('.cb-pk').eq(this.num).find('span');
-        if (this.conf.assign.includes('fb')) fb.html(this.count.fb || '');
-        if (this.conf.assign.includes('hb')) hb.html(this.count.hb || '');
-        if (this.conf.assign.includes('tw')) tw.html(this.count.tw || '');
-        if (this.conf.assign.includes('pk')) pk.html(this.count.pk || '');
+        if (this.conf.assign.includes('fb')) fb.html(this.count.fb);
+        if (this.conf.assign.includes('hb')) hb.html(this.count.hb);
+        if (this.conf.assign.includes('tw')) tw.html(this.count.tw);
+        if (this.conf.assign.includes('pk')) pk.html(this.count.pk);
       }
     }, {
       key: 'save',

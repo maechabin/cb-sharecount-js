@@ -97,7 +97,7 @@
             that.count.fb = obj.shares || obj.likes || 0;
             break;
           case 'hb':
-            that.count.hb = obj || 0;
+            that.count.hb = (Array.isArray(obj)) ? obj[0] : obj || 0;
             break;
           case 'tw':
             that.count.tw = obj.count || 0;
@@ -139,10 +139,10 @@
       const hb = $('.cb-hb').eq(this.num).find('span');
       const tw = $('.cb-tw').eq(this.num).find('span');
       const pk = $('.cb-pk').eq(this.num).find('span');
-      if (this.conf.assign.includes('fb')) fb.html(this.count.fb || '');
-      if (this.conf.assign.includes('hb')) hb.html(this.count.hb || '');
-      if (this.conf.assign.includes('tw')) tw.html(this.count.tw || '');
-      if (this.conf.assign.includes('pk')) pk.html(this.count.pk || '');
+      if (this.conf.assign.includes('fb')) fb.html(this.count.fb);
+      if (this.conf.assign.includes('hb')) hb.html(this.count.hb);
+      if (this.conf.assign.includes('tw')) tw.html(this.count.tw);
+      if (this.conf.assign.includes('pk')) pk.html(this.count.pk);
     }
 
     save() {
