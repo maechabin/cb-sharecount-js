@@ -50,7 +50,7 @@ $(document).ready(function () {
 </script>
 ```
 
-表示するSNSサービスをFacebookいいね数とはてなブックマーク登録数に限定する場合。
+表示するSNSサービスをFacebookいいね数とはてなブックマーク登録数に限定する場合
 ```javascript
 <script>
 $(document).ready(function () {
@@ -143,7 +143,7 @@ jQueryオブジェクトに指定したセレクター要素の子要素にそ�
 キャッシュ機能を使用する場合のキャッシュの有効期間を指定します。ms（ミリ秒）の数値を指定します。デフォルト値は1日で`86400000`。
 
 **assign {Array}**
-シュア数を取得するSNSサービスを指定します。次のようにサービスの略語を配列に指定します。`Facebook => 'fb'`、`Twitter => 'tw'`、`はてなブックマーク => 'hb'`、`Pocket => 'pk'`。デフォルト値は、すべて表示するで`['fb', 'hb', 'tw', 'pk']`。
+シュア数を取得するSNSサービスを指定します。次のようにサービスの略語を配列に指定します。`Facebook => 'fb'`、`Twitter => 'tw'`、`はてなブックマーク => 'hb'`、`Pocket => 'pk'`。デフォルト値は、すべてのサービスのシェア数を表示するようになっており`['fb', 'hb', 'tw', 'pk']`。
 
 ## Demo
 
@@ -157,6 +157,9 @@ jQueryオブジェクトに指定したセレクター要素の子要素にそ�
 MIT license
 
 ## Update
+
+016-08-25 v2.0.3
+- FacebookのAPIの仕様変更に対応
 
 2016-07-07 v2.0.0
 - Twitterツイート数（別途count.jsoonを使用）、Pocketシェア数に対応
