@@ -1,0 +1,55 @@
+<!doctype html>
+
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>cb-sharecount-js</title>
+  <style>
+    body {
+      color: #fff;
+      background-color: #0097A7;
+      text-align: center;
+      box-sizing: border-box;
+    }
+    h1 {
+      font-size: 56px;
+    }
+    .cb-share {
+      max-width: 600px;
+      width: 100%;
+      box-sizing: border-box;
+      margin: 0 auto;
+    }
+    .cb-share p {
+      box-sizing: border-box;
+      display: inline-block;
+      width: calc(100% / 4);
+    }
+    .cb-share span {
+      font-weight: bold;
+      font-size: 24px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>cb-sharecount-js</title>
+
+  <h2>mae.chab.in</h2>
+
+  <div class="cb-share" title="http://mae.chab.in/">
+    <p class="cb-hb">Hatena<br><span></span></p><p class="cb-fb">Facebook<br><span></span></p><p class="cb-tw">Twitter<br><span></span></p><p class="cb-pk">Pocket<br><span></span></p>
+  </div>
+
+  <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+  <script src="../dist/jquery.cbsharecount.js"></script>
+  <script>
+  $(".cb-share").cbShareCount({
+    cache: false,
+    cacheTime: 1100
+  });
+  </script>
+</body>
+
+</html>
