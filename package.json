@@ -6,7 +6,8 @@
   "scripts": {
     "watch": "babel ./src/app.js --watch --out-file ./dist/jquery.cbsharecount.js",
     "build": "babel ./src/app.js --compact=true -o ./dist/jquery.cbsharecount.min.js",
-    "copy": "cp ./src/app.js ./dist/jquery.cbsharecount.js"
+    "copy": "cp ./src/app.js ./dist/jquery.cbsharecount.js",
+    "docs": "cp ./dist/jquery.cbsharecount.min.js ./docs/jquery.cbsharecount.min.js"
   },
   "repository": {
     "type": "git",
