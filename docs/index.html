@@ -4,44 +4,41 @@
 
 <head>
   <meta charset="utf-8">
-  <title>cb-sharecount-js</title>
-  <style>
-    body {
-      color: #fff;
-      background-color: #0097A7;
-      text-align: center;
-      box-sizing: border-box;
-    }
-    h1 {
-      font-size: 56px;
-    }
-    .cb-share {
-      max-width: 600px;
-      width: 100%;
-      box-sizing: border-box;
-      margin: 0 auto;
-    }
-    .cb-share p {
-      box-sizing: border-box;
-      display: inline-block;
-      width: calc(100% / 4);
-    }
-    .cb-share span {
-      font-weight: bold;
-      font-size: 24px;
-    }
-  </style>
+  <title>SNSのシェア数取得JSプラグイン cb-sharecount-js</title>
+  <link rel="stylesheet" href="./css/font-awesome.min.css">
+  <link rel="stylesheet" href="./css/style.css">
 </head>
 
 <body>
-  <h1>cb-sharecount-js</title>
+  <h1>cb-sharecount-js</h1>
+  <p>複数のSNSシェア数を非同期で取得表示するJavaScriptプラグイン（キャッシュ機能付き）</p>
+  <p><a class="github-button" href="https://github.com/maechabin/cb-sharecount-js" data-style="mega" data-count-href="/maechabin/cb-sharecount-js/stargazers" data-count-api="/repos/maechabin/cb-sharecount-js#stargazers_count" data-count-aria-label="# stargazers on GitHub" aria-label="Star maechabin/cb-sharecount-js on GitHub">Star</a></p>
 
-  <h2>mae.chab.in</h2>
+  <div class="share">
+    <h2><a href="http://mae.chab.in/" target="_blank">mae.chab.in</a></h2>
 
-  <div class="cb-share" title="http://mae.chab.in/">
-    <p class="cb-hb">Hatena<br><span></span></p><p class="cb-fb">Facebook<br><span></span></p><p class="cb-tw">Twitter<br><span></span></p><p class="cb-pk">Pocket<br><span></span></p>
+    <div class="cb-share" title="http://mae.chab.in/">
+      <p class="cb-hb">Hatena<br><span></span></p><p class="cb-fb">Facebook<br><span></span></p><p class="cb-tw">Twitter<br><span></span></p><p class="cb-pk">Pocket<br><span></span></p>
+    </div>
   </div>
 
+  <ul class="feat">
+    <li>実装が簡単。プラグインを実行させたいjQueryオブジェクトに指定したセレクター要素のtitle属性に[シェア数を取得したいURL]を設定するだけ。JavaScriptの実装はたったの1行。
+    <li>同一ページ内で複数のURLの値の取得ができるので、ブログ記事の一覧などでの使用に最適。
+    <li>非同期かつ並列処理で値を取得するので、ページの表示にもやさしい。
+    <li>値だけを取得するので、レイアウトもデザインも自由に行える。
+    <li>localStorageを使ったcache機能付き（デフォルト有効期限: 1日）。同一ドメイン内であれば複数のページで共有可能。
+    <li>はてなブックマーク登録数、Facebookいいね数、Twitterツイート数、Pocketシェア数の4サービスに対応。表示するSNSを選択可能。
+  </ul>
+
+  <div>
+    <p class="button"><a href="https://github.com/maechabin/cb-sharecount-js" target="_blank"><i class="fa fa-github"></i> プラグイン詳細</a></p>
+    <p class="button"><a href="https://github.com/maechabin/cb-sharecount-js/archive/master.zip"><i class="fa fa-download"></i> ダウンロード</a></p>
+  </div>
+
+  <p><a href="https://github.com/maechabin/cb-sharecount-js" target="_blank">maechabin/cb-sharecount-js</a></p>
+
+　<script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
   <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
   <script src="jquery.cbsharecount.min.js"></script>
   <script>
@@ -49,6 +46,16 @@
     cache: false,
     cacheTime: 1100
   });
+  </script>
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-75823025-1', 'auto');
+  ga('send', 'pageview');
+
   </script>
 </body>
 

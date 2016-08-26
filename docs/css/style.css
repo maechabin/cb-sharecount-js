@@ -1,0 +1,72 @@
+body {
+  color: #fff;
+  background-color: #0097A7;
+  text-align: center;
+  box-sizing: border-box;
+}
+a {
+  color: #fff;
+}
+h1 {
+  font-size: 64px;
+  margin-bottom: 8px;
+}
+.share {
+  border-radius: 3px;
+  border: 1px solid #fff;
+  margin: 0 auto 16px;
+  max-width: 720px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 16px 0;
+}
+h2 {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+.cb-share {
+
+}
+.cb-share p {
+  box-sizing: border-box;
+  display: inline-block;
+  width: calc(100% / 4);
+}
+.cb-share span {
+  font-weight: bold;
+  font-size: 24px;
+}
+.button {
+  display: inline-block;
+  margin: 4px 0;
+}
+.button a {
+  box-sizing: border-box;
+  display: block;
+  width: 296px;
+  padding: 24px 0;
+  color: #fff;
+  border: 2px solid #fff;
+  text-decoration: none;
+  border-radius: 3px;
+  font-weight: bold;
+  transition: .3s;
+}
+.button a:hover {
+  background: #fff;
+  color: #0097A7;
+}
+.feat {
+  padding: 24px 16px 16px 32px;
+  box-sizing: border-box;
+  margin: 32px auto;
+  max-width: 720px;
+  width: 100%;
+  text-align: left;
+  background: #fff;
+  border-radius: 3px;
+}
+.feat li {
+  color: #0097A7;
+  margin-bottom: 8px;
+}
