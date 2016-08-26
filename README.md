@@ -19,6 +19,14 @@ count.jsoon
 https://jsoon.digitiminimi.com/
 ```
 
+## Demo
+
+[http://maechabin.github.io/cb-sharecount-js/](http://maechabin.github.io/cb-sharecount-js/)
+
+私のブログにも実装済みです。  
+[http://mae.chab.in](http://mae.chab.in/)
+
+
 ## Usage
 
 ### ファイルの読み込み
@@ -144,13 +152,6 @@ jQueryオブジェクトに指定したセレクター要素の子要素にそ�
 
 **assign {Array}**
 シュア数を取得するSNSサービスを指定します。次のようにサービスの略語を配列に指定します。`Facebook => 'fb'`、`Twitter => 'tw'`、`はてなブックマーク => 'hb'`、`Pocket => 'pk'`。デフォルト値は、すべてのサービスのシェア数を表示するようになっており`['fb', 'hb', 'tw', 'pk']`。
-
-## Demo
-
-[http://jsdo.it/maechabin/mixw](http://jsdo.it/maechabin/mixw)
-
-私のブログにも実装済みです。  
-[http://mae.chab.in](http://mae.chab.in/)
 
 ## License
 

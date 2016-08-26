@@ -1,7 +1,7 @@
 {
   "name": "cbsharecount",
-  "version": "2.0.3",
-  "description": "",
+  "version": "2.0.4",
+  "description": "任意のURL（複数可）のSNS上でのシェア数を非同期で取得して表示するためのjQueryプラグイン。キャッシュ機能付き。",
   "main": "jquery.cbsharecount.js",
   "scripts": {
     "watch": "babel ./src/app.js --watch --out-file ./dist/jquery.cbsharecount.js",
