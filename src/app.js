@@ -1,5 +1,5 @@
 /*!
- * jquery.cbsharecount.js v2.0.3
+ * jquery.cbsharecount.js v2.0.5
  * Auther @maechabin
  * Licensed under mit license
  * https://github.com/maechabin/jquery.cb-share-count.js
@@ -94,7 +94,7 @@
         const obj = this[0] ? this[0] : this;
         switch (self.key) {
           case 'fb':
-            that.count.fb = obj.share.share_count || 0;
+            that.count.fb = ('share' in obj) ? obj.share.share_count : 0;
             break;
           case 'hb':
             that.count.hb = (Array.isArray(obj)) ? obj[0] : obj || 0;
