@@ -94,7 +94,7 @@
         const obj = this[0] ? this[0] : this;
         switch (self.key) {
           case 'fb':
-            that.count.fb = ('share' in obj) ? obj.share.share_count : 0;
+            that.count.fb = ('share' in obj && 'share_count' in obj.share) ? obj.share.share_count : 0;
             break;
           case 'hb':
             that.count.hb = (Array.isArray(obj)) ? obj[0] : obj || 0;
