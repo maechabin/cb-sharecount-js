@@ -1,5 +1,5 @@
 /*!
- * jquery.cbsharecount.js v2.0.5
+ * jquery.cbsharecount.js v2.0.7
  * Auther @maechabin
  * Licensed under mit license
  * https://github.com/maechabin/jquery.cb-share-count.js
@@ -106,7 +106,7 @@
             if (this[0].results) {
               const content = obj.results.toString();
               const match = content.match(/&lt;em id="cnt"&gt;(\d+)&lt;\/em&gt;/i);
-              that.count.pk = (match != null) ? match[1] : 0;
+              that.count.pk = (match !== null) ? Number(match[1]) : 0;
             }
             break;
           default:
@@ -177,7 +177,10 @@
         }
 
         if (cache && currentTime - cache.saveTime < this.conf.cacheTime) {
-          this.conf.assign.map((key) => (this.count[key] = cache[key] || ''));
+          console.log(cache.fb);
+          this.conf.assign.map(
+            (key) => (this.count[key] = (typeof cache[key] === 'number') ? cache[key] : '')
+          );
           return this.render();
         }
       }
