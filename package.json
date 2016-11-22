@@ -1,17 +1,16 @@
 {
   "name": "cbsharecount",
-  "version": "2.0.7",
+  "version": "2.1.0",
   "description": "任意のURL（複数可）のSNS上でのシェア数を非同期で取得して表示するためのjQueryプラグイン。キャッシュ機能付き。",
   "main": "jquery.cbsharecount.js",
   "scripts": {
-    "watch": "babel ./src/app.js --watch --out-file ./dist/jquery.cbsharecount.js",
-    "build": "babel ./src/app.js --compact=true -o ./dist/jquery.cbsharecount.min.js",
-    "copy": "cp ./src/app.js ./dist/jquery.cbsharecount.js",
+    "watch": "watchify -t babelify ./src/app.js -o ./dist/jquery.cbsharecount.js",
+    "build": "browserify -t babelify ./src/app.js | uglifyjs -c warnings=false > ./dist/jquery.cbsharecount.min.js",
     "docs": "cp ./dist/jquery.cbsharecount.min.js ./docs/jquery.cbsharecount.min.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/maechabin/jquery.cb-share-count.js.git"
+    "url": "https://github.com/maechabin/jquery.cb-share-count-js.git"
   },
   "keywords": [
     "jQuery",
@@ -22,17 +21,35 @@
   "bugs": {
     "url": "https://github.com/maechabin/jquery.cb-share-count.js/issues"
   },
-  "homepage": "https://github.com/maechabin/jquery.cb-share-count.js",
+  "homepage": "https://github.com/maechabin/jquery.cb-share-count-js",
+  "browserify-shim": {
+    "jquery": "global:$"
+  },
+  "browser": {
+    "ShareCount": "./src/ShareCount.js"
+  },
+  "browserify": {
+    "transform": [
+      "browserify-shim"
+    ]
+  },
   "dependencies": {
     "jquery": "^1.9.0"
   },
   "devDependencies": {
     "babel-cli": "^6.10.1",
+    "babel-plugin-array-includes": "^2.0.3",
+    "babel-preset-es2015": "^6.18.0",
+    "babelify": "^7.3.0",
+    "browserify": "^13.1.1",
+    "browserify-shim": "^3.8.12",
     "eslint": "^3.0.0",
     "eslint-config-airbnb-base": "^3.0.1",
     "eslint-plugin-import": "^1.10.0",
     "grunt": "^0.4.5",
     "grunt-contrib-uglify": "^0.6.0",
-    "grunt-contrib-watch": "^0.6.1"
+    "grunt-contrib-watch": "^0.6.1",
+    "uglifyjs": "^2.4.10",
+    "watchify": "^3.7.0"
   }
 }
