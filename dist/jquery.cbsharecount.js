@@ -28,6 +28,7 @@ var ShareCount = function () {
     this.send_data = {};
     this.num = i;
     this.options = options;
+    this.jqxhr = {};
     this.defaults = {
       cache: true,
       cacheTime: 86400000,
@@ -80,19 +81,25 @@ var ShareCount = function () {
     }
   }, {
     key: 'getCount',
-    value: function getCount(key) {
+    value: function getCount(key, id) {
+      var _this = this;
+
       var d = new _jquery2.default.Deferred();
 
-      _jquery2.default.ajax({
+      this.jqxhr[id] = _jquery2.default.ajax({
         type: 'get',
         url: this.api_url,
-        cache: true,
+        cache: false,
+        timeout: 10000,
         dataType: 'jsonp',
         data: this.send_data,
         success: d.resolve,
         error: d.reject,
         context: key
+      }).fail(function () {
+        return _this.jqxhr[id].abort();
       });
+
       return d.promise();
     }
   }, {
@@ -133,19 +140,22 @@ var ShareCount = function () {
   }, {
     key: 'setup',
     value: function setup() {
-      var _this = this;
+      var _this2 = this;
 
       var that = this;
       var df = [];
       var data = that.setParam(that.site_url);
       _jquery2.default.each(data, function (key, val) {
-        _this.api_url = val.api_url;
-        _this.send_data = val.param;
-        df.push(_this.getCount(key));
+        var id = new Date().getTime();
+        _this2.api_url = val.api_url;
+        _this2.send_data = val.param;
+        df.push(_this2.getCount(key, id));
       });
 
       _jquery2.default.when.apply(_jquery2.default, df).done(function () {
         return that.takeCount(this.toString(), arguments);
+      }).fail(function (res) {
+        return res.abort();
       });
     }
   }, {
@@ -179,7 +189,7 @@ var ShareCount = function () {
   }, {
     key: 'checkCache',
     value: function checkCache() {
-      var _this2 = this;
+      var _this3 = this;
 
       var cache = void 0;
       var nocache = void 0;
@@ -201,7 +211,7 @@ var ShareCount = function () {
         if (cache && currentTime - cache.saveTime < this.conf.cacheTime) {
           // console.log(cache.fb);
           this.conf.assign.map(function (key) {
-            return _this2.count[key] = typeof cache[key] === 'number' ? cache[key] : '';
+            return _this3.count[key] = typeof cache[key] === 'number' ? cache[key] : '';
           });
           return this.render();
         }
@@ -209,14 +219,22 @@ var ShareCount = function () {
       return this.setup();
     }
   }, {
+    key: 'callMethod',
+    value: function callMethod(callback) {
+      if (callback) {
+        return callback();
+      }
+      return false;
+    }
+  }, {
     key: 'init',
     value: function init() {
       this.site_url = this.$element.attr('title');
       this.conf = _jquery2.default.extend({}, this.defaults, this.options);
       if (this.conf.cache) {
-        this.checkCache();
+        this.callMethod(this.checkCache());
       } else {
-        this.setup();
+        this.callMethod(this.setup());
       }
       return this;
     }

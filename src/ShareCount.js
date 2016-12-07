@@ -10,6 +10,7 @@ export default class ShareCount {
     this.send_data = {};
     this.num = i;
     this.options = options;
+    this.jqxhr = {};
     this.defaults = {
       cache: true,
       cacheTime: 86400000,
@@ -58,19 +59,23 @@ export default class ShareCount {
     return data;
   }
 
-  getCount(key) {
+  getCount(key, id) {
     const d = new $.Deferred();
 
-    $.ajax({
+    this.jqxhr[id] = $.ajax({
       type: 'get',
       url: this.api_url,
-      cache: true,
+      cache: false,
+      timeout: 10000,
       dataType: 'jsonp',
       data: this.send_data,
       success: d.resolve,
       error: d.reject,
       context: key,
-    });
+    }).fail(
+      () => this.jqxhr[id].abort()
+    );
+
     return d.promise();
   }
 
@@ -113,14 +118,17 @@ export default class ShareCount {
     const df = [];
     const data = that.setParam(that.site_url);
     $.each(data, (key, val) => {
+      const id = new Date().getTime();
       this.api_url = val.api_url;
       this.send_data = val.param;
-      df.push(this.getCount(key));
+      df.push(this.getCount(key, id));
     });
 
-    $.when.apply($, df).done(function () {
-      return that.takeCount(this.toString(), arguments);
-    });
+    $.when.apply($, df)
+      .done(function () {
+        return that.takeCount(this.toString(), arguments);
+      })
+      .fail((res) => res.abort());
   }
 
   render() {
@@ -176,13 +184,20 @@ export default class ShareCount {
     return this.setup();
   }
 
+  callMethod(callback) {
+    if (callback) {
+      return callback();
+    }
+    return false;
+  }
+
   init() {
     this.site_url = this.$element.attr('title');
     this.conf = $.extend({}, this.defaults, this.options);
     if (this.conf.cache) {
-      this.checkCache();
+      this.callMethod(this.checkCache());
     } else {
-      this.setup();
+      this.callMethod(this.setup());
     }
     return this;
   }
